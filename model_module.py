@@ -10,15 +10,7 @@ import torch.nn.functional as F
 import gc
 from copy import deepcopy
 from model.e2e import E2E
-
 import yaml
-
-# Чтение YAML файла в виде словаря
-with open('dictionary.yaml', 'r') as file:
-    yaml_dict = yaml.safe_load(file)
-
-# Вывод словаря
-print(yaml_dict)
 
 
 class ModelModule(LightningModule):
@@ -70,14 +62,11 @@ class ModelModule(LightningModule):
 
 
     def shared_step(self, batch, mode):
-        # print(batch)
-        # print(type(batch))
         frames = batch['frames']
         labels = batch['label']
         # output = self.model(frames) if self.training or self.model_ema is None else self.model_ema.module(frames)
         output = self.model(frames)
 
-        # print(output)
         loss = self.criterion(output, labels.squeeze(1))
         acc = accuracy(output, labels.squeeze(1))
 
@@ -125,14 +114,14 @@ class ModelModule(LightningModule):
         words = np.concatenate([x['words'] for x in outputs])
         acc = np.array([x['test_acc'] for x in outputs])
 
-        f1_score = multiclass_f1(labels, predictions)
-        precision = multiclass_precision(labels, predictions)
-        recall = multiclass_recall(labels, predictions)
+        f1 = f1_score(labels, predictions, average="weighted")
+        precision = precision_score(labels, predictions, average="weighted")
+        recall = recall_score(labels, predictions, average="weighted")
         wacc = balanced_accuracy_score(labels, predictions)
     
         print(f"AVERAGE ACCURACY: {acc.mean()}")
 
-        print(f"F1 score: {f1_score:.3f}")
+        print(f"F1 score: {f1:.3f}")
         print(f"Precision: {precision:.3f}")
         print(f"Recall: {recall:.3f}")
         print(f"WAcc: {wacc:.3f}")
@@ -142,13 +131,9 @@ class ModelModule(LightningModule):
         predictions = torch.cat([x['predictions'] for x in outputs]).cpu().numpy()
         labels = torch.cat([x['labels'] for x in outputs]).cpu().numpy()
         words = np.concatenate([x['words'] for x in outputs])
-        # acc = np.array([x['test_acc'] for x in outputs])
-        # self.confusion_matrix(labels, predictions, words)
+
         avg_acc = torch.FloatTensor([x['val_acc'] for x in outputs]).mean()
         avg_loss = torch.FloatTensor([x['val_loss'] for x in outputs]).mean()
-
-        # avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
-        # avg_acc = torch.stack([x['val_acc'] for x in outputs]).mean()
 
         if self.best_val_acc < avg_acc:
             self.best_val_acc = avg_acc
@@ -170,102 +155,10 @@ class ModelModule(LightningModule):
         scheduler = {"scheduler": scheduler, "interval": "step", "frequency": 1}
         return [optimizer], [scheduler]
 
-    # def train_dataloader(self):
-    #     train_data = LRWDataset(
-    #         path=self.hparams.data,
-    #         num_words=self.hparams.words,
-    #         in_channels=self.in_channels,
-    #         augmentations=self.augmentations,
-    #         estimate_pose=False,
-    #         seed=self.hparams.seed
-    #     )
-    #     train_loader = DataLoader(train_data, shuffle=True, batch_size=self.hparams.batch_size, num_workers=self.hparams.workers, pin_memory=True, collate_fn=collate)
-    #     # train_loader = DataLoader(train_data, shuffle=True, batch_size=self.hparams.batch_size, num_workers=self.hparams.workers, pin_memory=True)
-        
-    #     return train_loader
-
-    # def val_dataloader(self):
-    #     val_data = LRWDataset(
-    #         path=self.hparams.data,
-    #         num_words=self.hparams.words,
-    #         in_channels=self.in_channels,
-    #         mode='val',
-    #         estimate_pose=False,
-    #         seed=self.hparams.seed
-    #     )
-    #     val_loader = DataLoader(val_data, shuffle=False, batch_size=self.hparams.batch_size * 2, num_workers=self.hparams.workers, collate_fn=collate)
-    #     # val_loader = DataLoader(val_data, shuffle=False, batch_size=self.hparams.batch_size * 2, num_workers=self.hparams.workers)
-        
-    #     return val_loader
-
-    # def test_dataloader(self):
-    #     test_data = LRWDataset(
-    #         path=self.hparams.data,
-    #         num_words=self.hparams.words,
-    #         in_channels=self.in_channels,
-    #         mode='test',
-    #         estimate_pose=False,
-    #         seed=self.hparams.seed
-    #     )
-    #     test_loader = DataLoader(test_data, shuffle=False, batch_size=self.hparams.batch_size * 2, num_workers=self.hparams.workers, collate_fn=collate)
-    #     # test_loader = DataLoader(test_data, shuffle=False, batch_size=self.hparams.batch_size * 2, num_workers=self.hparams.workers)
-        
-    #     return test_loader
 
 def accuracy(predictions, labels):
-    # print("PREDICTIONS: ", predictions, predictions.shape)
     preds = torch.exp(predictions)
     preds_ = torch.argmax(preds, dim=1)
-    # print("preds_: ", preds_, preds_.shape)
-    # print("LABELS: ", labels)
-    # print("CORRECT: ",  preds_ == labels)
     correct = (preds_ == labels).sum().item()
-    # print("CORRECT NUM: ", correct)
     accuracy = correct / labels.shape[0]
     return accuracy  
-
-def multiclass_f1(labels, predictions, average='weighted'):
-    """
-    Compute the F1 score for multiclass classification.
-
-    Parameters:
-    labels (array-like): Ground truth labels
-    predictions (array-like): Predicted labels
-    average (str, optional): Method to compute the F1 score. Can be 'macro', 'weighted' or 'none'.
-
-    Returns:
-    f1 (float): F1 score
-    """
-
-    return f1_score(labels, predictions, average=average)
-
-def multiclass_precision(labels, predictions, average='weighted'):
-    """
-    Compute the Precision score for multiclass classification.
-
-    Parameters:
-    labels (array-like): Ground truth labels
-    predictions (array-like): Predicted labels
-    average (str, optional): Method to compute the Precision score. Can be 'macro', 'weighted' or 'none'.
-
-    Returns:
-    precision (float): Precision score
-    """
-    # preds = torch.exp(predictions)
-    # preds_ = torch.argmax(preds, dim=1)
-    return precision_score(labels, predictions, average=average)
-
-def multiclass_recall(labels, predictions, average='weighted'):
-    """
-    Compute the Recall score for multiclass classification.
-
-    Parameters:
-    labels (array-like): Ground truth labels
-    predictions (array-like): Predicted labels
-    average (str, optional): Method to compute the Recall score. Can be 'macro', 'weighted' or 'none'.
-
-    Returns:
-    recall (float): Recall score
-    """
-
-    return recall_score(labels, predictions, average=average)
