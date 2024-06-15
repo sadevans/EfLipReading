@@ -34,9 +34,7 @@ class EMACallback(Callback):
         "Initialize `ModelEmaV2` from timm to keep a copy of the moving average of the weights"
         self.ema = ModelEmaV2(pl_module, decay=self.decay, device=None)
 
-    def on_train_batch_end(
-        self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx
-    ):
+    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
         "Update the stored parameters using a moving average"
         # Update currently maintained parameters.
         self.ema.update(pl_module)
@@ -65,7 +63,10 @@ class EMACallback(Callback):
         if self.ema is not None:
             return {"state_dict_ema": get_state_dict(self.ema, unwrap_model)}
 
-    def on_load_checkpoint(self, callback_state):
+    # def on_load_checkpoint(self, callback_state):
+    #     if self.ema is not None:
+    #         self.ema.module.load_state_dict(callback_state["state_dict_ema"])
+    def load_state_dict(self, callback_state):
         if self.ema is not None:
             self.ema.module.load_state_dict(callback_state["state_dict_ema"])
 
