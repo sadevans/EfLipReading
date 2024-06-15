@@ -1,10 +1,12 @@
 import os
-
+import yaml
 import torch
 import torchvision
 import matplotlib.pyplot as plt
 import random
 # matplotlib qt
+current_file_directory = os.path.abspath(__file__)
+
 
 def cut_or_pad(data, size, dim=0):
     """
@@ -43,8 +45,8 @@ def build_word_list(directory, num_words, seed, words=None):
     labels_words = {}
     for i, word in enumerate(words):
         labels_words[i] = word
-    with open(f'labels/labels_{num_words}_seed{seed}.yaml', 'w') as file:
-        yaml.dump(data, file)
+    with open(f'{'/'.join(current_file_directory.split('/')[:-2])}/model/labels/labels_{num_words}_seed{seed}.yaml', 'w') as file:
+        yaml.dump(labels_words, file)
     return words
 
 
