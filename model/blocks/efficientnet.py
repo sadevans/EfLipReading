@@ -23,7 +23,7 @@ class EfficientNetV2(nn.Module):
         - act_layer: basic activation
         - norm_layer: basic normalization
     """
-    def __init__(self, layer_infos, dropout=0.3, stochastic_depth=0.8,
+    def __init__(self, layer_infos, out_channels=384, dropout=0.3, stochastic_depth=0.8,
                  block=MBConv, act_layer=nn.SiLU, norm_layer=nn.BatchNorm2d):
         super(EfficientNetV2, self).__init__()
         self.layer_infos = layer_infos
@@ -93,7 +93,7 @@ def get_efficientnet_v2(config, model_size="B", pretrained=False, dropout=0.3, s
 
 
 def get_efficientnet_v2_structure(config, model_size='B'):
-    with open(config, 'r') as file:
-        info = yaml.safe_load(file)
-    efficientnet_config = info['efficient-net-blocks'][model_size]
-    return info['efficient-net-blocks'][model_size]
+    # with open(config, 'r') as file:
+    #     info = yaml.safe_load(file)
+    efficientnet_config = config['efficient-net-blocks'][model_size]
+    return config['efficient-net-blocks'][model_size]

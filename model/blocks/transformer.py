@@ -25,25 +25,25 @@ class TransformerEncoder(nn.Module):
                Shape: (batch_size, sequence_length, channels)
         """
         
-        # attn_output, _ = self.self_attn(x, x, x, attn_mask=x_mask, key_padding_mask=x_key_padding_mask)
-        # x = x + self.dropout1(attn_output)                  # Add & Norm after residual connection here
-        # x = self.norm1(x)
-
-        # x2 = self.linear2(self.relu(self.linear1(x)))
-        # x = x + self.dropout2(x2)                           # Add & Norm after residual connection here
-        # x = self.norm2(x)
-        # max_len = x.size(1)
-        lengths_after_extractor = (x != 0).sum(dim=2).squeeze(1)
-        max_len = x.size(1)
-        key_padding_mask = torch.arange(max_len)[None, :] >= lengths_after_extractor[:, None]
-        key_padding_mask = key_padding_mask.to(x.device)
-
-        attn_output, _ = self.self_attn(x, x, x, key_padding_mask=key_padding_mask)
-        x = x + self.dropout1(attn_output)
+        attn_output, _ = self.self_attn(x, x, x, attn_mask=None, key_padding_mask=None)
+        x = x + self.dropout1(attn_output)                  # Add & Norm after residual connection here
         x = self.norm1(x)
 
         x2 = self.linear2(self.relu(self.linear1(x)))
-        x = x + self.dropout2(x2)
+        x = x + self.dropout2(x2)                           # Add & Norm after residual connection here
         x = self.norm2(x)
+        # max_len = x.size(1)
+        # lengths_after_extractor = (x != 0).sum(dim=2).squeeze(1)
+        # max_len = x.size(1)
+        # key_padding_mask = torch.arange(max_len)[None, :] >= lengths_after_extractor[:, None]
+        # key_padding_mask = key_padding_mask.to(x.device)
+
+        # attn_output, _ = self.self_attn(x, x, x, key_padding_mask=key_padding_mask)
+        # x = x + self.dropout1(attn_output)
+        # x = self.norm1(x)
+
+        # x2 = self.linear2(self.relu(self.linear1(x)))
+        # x = x + self.dropout2(x2)
+        # x = self.norm2(x)
 
         return x

@@ -46,10 +46,11 @@ def init_3dconv(model):
 
 
 def get_conv_3d(config, model_size="S"):
-    with open(config, 'r') as file:
-        info = yaml.safe_load(file)
-    info_el = info['frontend-3d'][0]
-    out_channels = info['efficient-net-blocks'][model_size][0][3]
+    print(config)
+    # with open(config, 'r') as file:
+    #     info = yaml.safe_load(file)
+    info_el = config['frontend-3d'][0]
+    out_channels = config['efficient-net-blocks'][model_size][0][3]
     model = Conv3D(in_channels=info_el[0], out_channels=out_channels, kernel=tuple(info_el[2]), loss_type=info_el[3], if_maxpool=info_el[4])
     init_3dconv(model)
     return model

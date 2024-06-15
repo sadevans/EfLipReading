@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
-from blocks.frontend import Conv3DEfficientNetV2
-from blocks.transformer import TransformerEncoder
-from blocks.temporal import TCN, tcn_init
+from .blocks.frontend import Conv3DEfficientNetV2
+from .blocks.transformer import TransformerEncoder
+from .blocks.temporal import TCN, tcn_init
 import numpy as np
 
 
@@ -10,11 +10,12 @@ class E2E(nn.Module):
     def __init__(self, config,  dropout=0.3, in_channels=1, num_classes=34, efficient_net_size="S") :
         super(E2E, self).__init__()
 
+        self.dropout = dropout
         self.num_classes = num_classes
         self.frontend_3d = Conv3DEfficientNetV2(config, efficient_net_size=efficient_net_size)
 
-        self.transformer_encoder = TransformerEncoder()
-        self.tcn_block = TCN()
+        self.transformer_encoder = TransformerEncoder(dropout=self.dropout)
+        self.tcn_block = TCN(dropout=self.dropout)
 
         self.temporal_avg = nn.AdaptiveAvgPool1d(1)
 
