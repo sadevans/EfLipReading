@@ -11,10 +11,6 @@ class DataModule(LightningDataModule):
     def __init__(self, hparams):
         super().__init__()
         self.save_hyperparameters(hparams)
-        # self.cfg = cfg
-        # self.cfg.gpus = torch.cuda.device_count()
-        # self.total_gpus = self.cfg.gpus * self.cfg.trainer.num_nodes
-        self.k = None
         self.last_batch = None
         self.in_channels=1
 
@@ -38,11 +34,6 @@ class DataModule(LightningDataModule):
             seed=self.hparams.seed,
             words=self.hparams.words_list
         )
-
-        # train_loader = DataLoader(train_data, shuffle=True, batch_size=self.hparams.batch_size, num_workers=self.hparams.workers, pin_memory=True, collate_fn=collate)
-        # train_loader = DataLoader(train_data, shuffle=True, batch_size=self.hparams.batch_size, num_workers=self.hparams.workers, pin_memory=True)
-        
-        # return train_loader
         return self._dataloader(train_data, shuffle=True)
 
     def val_dataloader(self):
@@ -56,10 +47,6 @@ class DataModule(LightningDataModule):
             seed=self.hparams.seed,
             words=self.hparams.words_list
         )
-        # val_loader = DataLoader(val_data, shuffle=False, batch_size=self.hparams.batch_size * 2, num_workers=self.hparams.workers, collate_fn=collate)
-        # val_loader = DataLoader(val_data, shuffle=False, batch_size=self.hparams.batch_size * 2, num_workers=self.hparams.workers)
-        
-        # return val_loader
         return self._dataloader(val_data)
 
     def test_dataloader(self):
@@ -70,11 +57,7 @@ class DataModule(LightningDataModule):
             num_words=self.hparams.words,
             in_channels=self.in_channels,
             mode='test',
-            estimate_pose=False,
             seed=self.hparams.seed,
             words=self.hparams.words_list
         )
-        # test_loader = DataLoader(test_data, shuffle=False, batch_size=self.hparams.batch_size * 2, num_workers=self.hparams.workers, collate_fn=collate)
-        # test_loader = DataLoader(test_data, shuffle=False, batch_size=self.hparams.batch_size * 2, num_workers=self.hparams.workers)
-        
         return self._dataloader(test_data)
