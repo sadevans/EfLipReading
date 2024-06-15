@@ -22,7 +22,7 @@ class ModelModule(LightningModule):
         self.save_hyperparameters(hparams)
         self.dropout_rate = self.hparams.dropout
         
-        with open(f'data/labels/labels_{self.hparams.words}_seed{self.hparams.seed}.yaml', 'r') as file:
+        with open(f'labels/labels_{self.hparams.words}_seed{self.hparams.seed}.yaml', 'r') as file:
             self.labels_into_words = yaml.safe_load(file)
 
         self.in_channels = 1
