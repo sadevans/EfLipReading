@@ -1,10 +1,12 @@
 import os
-
+import yaml
 import torch
 import torchvision
 import matplotlib.pyplot as plt
 import random
 # matplotlib qt
+current_file_directory = os.path.abspath(__file__)
+
 
 def cut_or_pad(data, size, dim=0):
     """
@@ -39,6 +41,12 @@ def build_word_list(directory, num_words, seed, words=None):
     else:
         words.sort()
         random.shuffle(words)
+
+    labels_words = {}
+    for i, word in enumerate(words):
+        labels_words[i] = word
+    with open(f'{'/'.join(current_file_directory.split('/')[:-2])}/model/labels/labels_{num_words}_seed{seed}.yaml', 'w') as file:
+        yaml.dump(labels_words, file)
     return words
 
 
@@ -58,6 +66,7 @@ class LRWDataset(torch.utils.data.Dataset):
         paths = []
         file_list = []
         labels = []
+        
         for i, word in enumerate(words):
             dirpath = directory + "/{}/{}".format(word, mode)
             files = os.listdir(dirpath)
@@ -69,7 +78,7 @@ class LRWDataset(torch.utils.data.Dataset):
                     labels.append(i)
 
         return paths, file_list, labels, words
-
+    
 
     def __len__(self):
         return len(self.video_paths)

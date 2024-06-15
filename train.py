@@ -4,7 +4,7 @@ from pytorch_lightning.loggers import WandbLogger
 
 from callbacks.ema_callback import EMACallback
 from data.datamodule import DataModule
-from model_module import ModelModule
+from model.model_module import ModelModule
 from datetime import datetime
 
 import hydra

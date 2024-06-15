@@ -5,7 +5,7 @@ import hydra
 import torch
 
 from pytorch_lightning import Trainer
-from model_module import ModelModule
+from model.model_module import ModelModule
 from data.datamodule import DataModule
 
 
