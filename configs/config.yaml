@@ -1,0 +1,29 @@
+defaults:
+  - _self_
+  - data: default
+  - model: default
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+hydra:  
+  output_subdir: null  
+  run:  
+    dir: .
+exp_dir:
+efficientnet_size: T
+words: 100
+words_list: 
+batch_size: 16
+epochs: 40
+lr: 0.0001
+dropout: 0.4
+weight_decay: 0.00001
+warmup_epochs: 3
+ema_decay: 0.999
+workers:
+seed: 42
+in_channels: 1
+gpus: 
+name_exp: "lrw_eng"
+checkpoint_dir: "/media/sadevans/T7 Shield/PERSONAL/Diplom/datasets/LRW/checkpoints/WORDS"
+checkpoint:
+pretrained_model_path: "/media/sadevans/T7 Shield/PERSONAL/Diplom/datasets/LRW/checkpoints/WORDS/exp_lr0.0001_batch_size16_dropout0.4/lrw_100words_expw_conv3d_more/zsb1tosi/checkpoints/epoch=15.ckpt"
