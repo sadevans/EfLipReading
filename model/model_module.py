@@ -11,10 +11,11 @@ import gc
 from copy import deepcopy
 from model.e2e import E2E
 import yaml
-
+import os
+current_file_directory = os.path.abspath(__file__)
 
 class ModelModule(LightningModule):
-    def __init__(self, hparams):
+    def __init__(self, hparams, mode="trainval"):
         super().__init__()
         self.save_hyperparameters(hparams)
         torch.cuda.empty_cache()
@@ -22,8 +23,9 @@ class ModelModule(LightningModule):
         self.save_hyperparameters(hparams)
         self.dropout_rate = self.hparams.dropout
         
-        with open(f'labels/labels_{self.hparams.words}_seed{self.hparams.seed}.yaml', 'r') as file:
-            self.labels_into_words = yaml.safe_load(file)
+        self.labels_into_words = None
+        if mode != "trainval":
+            self.get_words_labels()
 
         self.in_channels = 1
         self.num_classes = self.hparams.words
@@ -52,6 +54,11 @@ class ModelModule(LightningModule):
 
         return words
 
+    def get_words_labels(self):
+        model_dir = '/'.join(current_file_directory.split('/')[:-1])
+        with open(f'{model_dir}/labels/labels_{self.hparams.words}_seed{self.hparams.seed}.yaml', 'r') as file:
+            self.labels_into_words = yaml.safe_load(file)
+        
     
     def training_step(self, batch, batch_idx):
         return self.shared_step(batch, "train")

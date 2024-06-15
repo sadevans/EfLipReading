@@ -17,7 +17,8 @@ class VideoTransform:
         if subset == "train":
             self.video_pipeline = torch.nn.Sequential(
                 FunctionalModule(lambda x: x / 255.0),
-                torchvision.transforms.RandomCrop(88),
+                # torchvision.transforms.RandomCrop(88),
+                torchvision.transforms.CenterCrop(88),
                 torchvision.transforms.Grayscale(),
                 # torchvision.transforms.Normalize(0.421, 0.165),
                 torchvision.transforms.Normalize(0.4161, 0.1688)

@@ -93,7 +93,5 @@ def get_efficientnet_v2(config, model_size="B", pretrained=False, dropout=0.3, s
 
 
 def get_efficientnet_v2_structure(config, model_size='B'):
-    # with open(config, 'r') as file:
-    #     info = yaml.safe_load(file)
     efficientnet_config = config['efficient-net-blocks'][model_size]
-    return config['efficient-net-blocks'][model_size]
+    return efficientnet_config
