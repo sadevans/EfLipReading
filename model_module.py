@@ -11,6 +11,15 @@ import gc
 from copy import deepcopy
 from model.e2e import E2E
 
+import yaml
+
+# Чтение YAML файла в виде словаря
+with open('dictionary.yaml', 'r') as file:
+    yaml_dict = yaml.safe_load(file)
+
+# Вывод словаря
+print(yaml_dict)
+
 
 class ModelModule(LightningModule):
     def __init__(self, hparams):
@@ -20,7 +29,9 @@ class ModelModule(LightningModule):
         gc.collect()
         self.save_hyperparameters(hparams)
         self.dropout_rate = self.hparams.dropout
-
+        
+        with open(f'data/labels/labels_{self.hparams.words}_seed{self.hparams.seed}.yaml', 'r') as file:
+            self.labels_into_words = yaml.safe_load(file)
 
         self.in_channels = 1
         self.num_classes = self.hparams.words
@@ -38,6 +49,17 @@ class ModelModule(LightningModule):
         self.test_precision = []
         self.test_recall = []
         self.test_acc = []
+
+
+    def forward(self, sample):
+        output = self.model(sample)
+        preds = torch.exp(output)
+        preds_ = torch.argmax(preds, dim=1)
+
+        words = [self.labels_into_words[pr] for pr in preds_]
+
+        return words
+
     
     def training_step(self, batch, batch_idx):
         return self.shared_step(batch, "train")
