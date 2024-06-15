@@ -4,7 +4,6 @@ from blocks.frontend import Conv3DEfficientNetV2
 from blocks.transformer import TransformerEncoder
 from blocks.temporal import TCN, tcn_init
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 class E2E(nn.Module):
