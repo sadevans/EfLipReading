@@ -39,6 +39,12 @@ def build_word_list(directory, num_words, seed, words=None):
     else:
         words.sort()
         random.shuffle(words)
+
+    labels_words = {}
+    for i, word in enumerate(words):
+        labels_words[i] = word
+    with open(f'labels/labels_{num_words}_seed{seed}.yaml', 'w') as file:
+        yaml.dump(data, file)
     return words
 
 
@@ -58,6 +64,7 @@ class LRWDataset(torch.utils.data.Dataset):
         paths = []
         file_list = []
         labels = []
+        
         for i, word in enumerate(words):
             dirpath = directory + "/{}/{}".format(word, mode)
             files = os.listdir(dirpath)
@@ -69,7 +76,7 @@ class LRWDataset(torch.utils.data.Dataset):
                     labels.append(i)
 
         return paths, file_list, labels, words
-
+    
 
     def __len__(self):
         return len(self.video_paths)
