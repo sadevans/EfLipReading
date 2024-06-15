@@ -34,9 +34,10 @@ def configure_callbacks(args, save_checkpoint_dir):
         mode='min',
     )
 
-    ema_callback = EMACallback(decay=args.ema_decay)
-
-    return [checkpoint_callback, early_stop_callback, lr_monitor, ema_callback]
+    if args.use_ema: 
+        ema_callback = EMACallback(decay=args.ema_decay)
+        return [checkpoint_callback, early_stop_callback, lr_monitor, ema_callback]
+    return [checkpoint_callback, early_stop_callback, lr_monitor]
 
 
 @hydra.main(version_base="1.3", config_path="configs", config_name="config")
