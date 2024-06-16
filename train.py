@@ -2,9 +2,9 @@ from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint, Ea
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.loggers import WandbLogger
 
-from callbacks.ema_callback import EMACallback
-from data.datamodule import DataModule
-from model.model_module import ModelModule
+from scripts.callbacks.ema_callback import EMACallback
+from scripts.data.datamodule import DataModule
+from scripts.model.model_module import ModelModule
 from datetime import datetime
 
 import hydra
@@ -39,7 +39,7 @@ def configure_callbacks(args, save_checkpoint_dir):
     return [checkpoint_callback, early_stop_callback, lr_monitor]
 
 
-@hydra.main(version_base="1.3", config_path="configs", config_name="config")
+@hydra.main(version_base="1.3", config_path="scripts/configs", config_name="config")
 def main(cfg):
     seed_everything(cfg.seed)
 
