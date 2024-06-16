@@ -59,4 +59,5 @@ cd ..
 - В скрипте `scripts/model/e2e.py` содержится архитеткура модели.
 - В модуле `scripts/model/efficientnet_layers` реализованы слои и блоки EfficientNetV2.
 - В модуле  `scripts/data` реализованы скрипты для обработки данных и формирования датасета.
+- В модуле  `scripts/callbacks/ema_callback.py` реализован обработчик EMA.
 
