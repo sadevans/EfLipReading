@@ -22,6 +22,20 @@ source venv/bin/activate
 pip install .
 ```
 
+### Обновите hydra
+Это нужно для корректной работы
+```bash
+pip install hydra-core --upgrade
+```
+### Поставьте gale
+Он нужен для обработчика EMA 
+```bash
+git clone https://github.com/benihime91/gale
+cd gale
+pip install .
+cd ..
+```
+
 
 ## Реализованная архитектура
 Архитектура реализованной модели представлена ниже.
@@ -33,3 +47,5 @@ pip install .
 Логика программного комплекса обучения и валидации модели представлена ниже.
 
 ![program_train](https://github.com/sadevans/EfLipReading/assets/82286355/45050acc-2723-4d0b-b673-11452c05e5ea)
+
+Для обучения используется `pytorch-lightning`. Для загрузки конфигураций - `hydra`.
