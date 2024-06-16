@@ -65,4 +65,4 @@ cd ..
 python train.py
 ```
 
-Для обучения модели используется конфигурационный файл `scripts/configs/config.yaml`. Измените параметры в нем, если это необходимо. Также в конфигурационном файле `scripts/configs/data/default.yaml` укажите название вашего датасета и в файле `scripts/configs/data/dataset/имя\_датасета.yaml`
+Для обучения модели используется конфигурационный файл `scripts/configs/config.yaml`. Измените параметры в нем, если это необходимо. Также в конфигурационном файле `scripts/configs/data/default.yaml` укажите название вашего датасета и в файле `scripts/configs/data/dataset/имя_датасета.yaml`
