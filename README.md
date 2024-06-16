@@ -100,10 +100,7 @@ python eval.py
 | --------------------------------------------------|:-------------:| --------------------:|
 | **Реализация с EfficientNetV2-T**                 | 81.6          | 8                    |
 | **Реализация с EfficientNetV2-S**                 | 83.6          | 26                   |
-| MobiVSR: A Visual Speech Recognition
-Solution for Mobile Devices                         | 72.2          | 4.5                  |
-| Deformation Flow Based Two-Stream Network
-for Lip Reading                                     | 84.13         | 7,95                 |
-| Towards Practical Lipreading with Distilled
-and Efficient Model                                 | 85.5-87.9     | 28.8-36.4            |
+| MobiVSR: A Visual Speech Recognition Solution for Mobile Devices | 72.2          | 4.5                  |
+| Deformation Flow Based Two-Stream Network for Lip Reading                                     | 84.13         | 7,95                 |
+| Towards Practical Lipreading with Distilled and Efficient Model                                 | 85.5-87.9     | 28.8-36.4            |
 
