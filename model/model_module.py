@@ -4,12 +4,12 @@ from pytorch_lightning import LightningModule
 
 from sklearn.metrics import f1_score, precision_score, recall_score, balanced_accuracy_score
 import numpy as np
-from scheduler import WarmupCosineScheduler
+from .scheduler import WarmupCosineScheduler
 from torch import optim
 import torch.nn.functional as F
 import gc
 from copy import deepcopy
-from model.e2e import E2E
+from .e2e import E2E
 import yaml
 import os
 from omegaconf import OmegaConf
