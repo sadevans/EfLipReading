@@ -9,12 +9,12 @@ hydra:
   run:  
     dir: .
 exp_dir:
-efficientnet_size: T
+efficientnet_size: S
 use_ema: True
-words: 500
+words: 100
 words_list: 
 batch_size: 16
-epochs: 20
+epochs: 40
 lr: 0.0001
 dropout: 0.4
 weight_decay: 0.0005

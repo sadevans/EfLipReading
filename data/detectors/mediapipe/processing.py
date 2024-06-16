@@ -18,12 +18,10 @@ class VideoHandler:
 
 
     def __call__(self, video_frames, landmarks):
-        # должна работать и для полного видео и для реал-тайма (когда один фрейм)
         interpolated_landmarks = self.interpolate(landmarks)
         if interpolated_landmarks is None:
             return None
-        cropped_data = self.crop_roi(video_frames, interpolated_landmarks) # возвращает либо эрэй эрэев, либо просто эрэй (если один фрейм)
-        
+        cropped_data = self.crop_roi(video_frames, interpolated_landmarks) 
         return cropped_data
     
 
@@ -35,7 +33,6 @@ class VideoHandler:
             roi = self.cut_roi_patch(transformed_frame, transformed_landmarks[self.start_idx : self.stop_idx], \
                                 self.crop_height // 2, self.crop_width // 2)
             cropped_data.append(roi)
-
         return np.array(cropped_data)
 
 
@@ -82,7 +79,6 @@ class VideoHandler:
             delta = stop_lm - start_lm
             for idx in range(1, stop_idx - start_idx):
                 landmarks[start_idx + idx] = (start_lm + idx / float(stop_idx - start_idx) * delta)
-
         return landmarks
     
 

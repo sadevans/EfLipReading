@@ -165,3 +165,7 @@ gale/
 lightning_logs/
 data/lrw.py
 data/transforms.py
+model_zoo/
+demo.py
+utils.py
+data/dataloaders.py
