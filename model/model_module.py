@@ -12,6 +12,7 @@ from copy import deepcopy
 from model.e2e import E2E
 import yaml
 import os
+from omegaconf import OmegaConf
 current_file_directory = os.path.abspath(__file__)
 
 class ModelModule(LightningModule):
@@ -20,7 +21,6 @@ class ModelModule(LightningModule):
         self.save_hyperparameters(hparams)
         torch.cuda.empty_cache()
         gc.collect()
-        self.save_hyperparameters(hparams)
         self.dropout_rate = self.hparams.dropout
         
         self.labels_into_words = None
@@ -29,6 +29,10 @@ class ModelModule(LightningModule):
 
         self.in_channels = 1
         self.num_classes = self.hparams.words
+        if not hasattr(self.hparams, 'model'):
+            dir = '/'.join(current_file_directory.split('/')[:-2])
+            with open(f"{dir}/configs/model/default.yaml", 'r') as file:
+                self.hparams.model = OmegaConf.load(file)
 
         self.model = E2E(self.hparams.model, dropout=self.dropout_rate, in_channels=self.in_channels, \
                          num_classes=self.num_classes, efficient_net_size=self.hparams.efficientnet_size)
@@ -48,9 +52,8 @@ class ModelModule(LightningModule):
     def forward(self, sample):
         output = self.model(sample)
         preds = torch.exp(output)
-        preds_ = torch.argmax(preds, dim=1)
-
-        words = [self.labels_into_words[pr] for pr in preds_]
+        preds_ = torch.argmax(preds, dim=0)
+        words = self.labels_into_words[preds_.item()]
 
         return words
 
