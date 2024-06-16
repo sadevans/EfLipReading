@@ -1,5 +1,7 @@
-pytorch-lightning==1.8.0
+pytorch-lightning==1.5.10
 torch==2.2.2
+torchvision==0.17.2
+torchaudio==2.2.2
 wandb==0.16.6
 wget==3.2
 tqdm==4.66.2
